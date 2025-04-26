@@ -1,7 +1,6 @@
 package com.example.threemovetictactoe
 
-import android.graphics.BlurMaskFilter
-import android.graphics.Color
+import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +15,12 @@ class MainActivity : AppCompatActivity() {
     private var currentPlayer = "X"
     private var gameActive = true
     private val gameState = Array(9) { "" }
+
+    // Bot settings
+    private var playWithBot = false
+    private var botDifficulty = TicTacToeBot.Difficulty.MEDIUM
+    private var botMarker = "O" // Default bot plays as O
+    private lateinit var bot: TicTacToeBot
 
     // Move history for each player
     private val moveHistory = mutableMapOf(
@@ -50,17 +55,79 @@ class MainActivity : AppCompatActivity() {
         val boardGridLayout = findViewById<android.widget.GridLayout>(R.id.boardGridLayout)
         val resetButton = findViewById<android.widget.Button>(R.id.resetButton)
 
+        // Show game mode selection dialog
+        showGameModeDialog()
+
         // Create the game board
         createBoard(boardGridLayout)
 
         // Set up reset button
         resetButton.setOnClickListener {
-            resetGame()
+            showGameModeDialog()
         }
+    }
 
-        // Update UI
-        updateStatus()
-        updateCounts()
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showGameModeDialog() {
+        val options = arrayOf("2 Players", "Play vs Easy Bot", "Play vs Medium Bot", "Play vs Hard Bot")
+
+        AlertDialog.Builder(this)
+            .setTitle("Select Game Mode")
+            .setItems(options) { dialog, which ->
+                gameActive = true
+                resetGame()
+
+                when (which) {
+                    0 -> {
+                        // 2 Players mode
+                        playWithBot = false
+                    }
+                    1, 2, 3 -> {
+                        // Bot mode with different difficulty levels
+                        playWithBot = true
+                        botDifficulty = when (which) {
+                            1 -> TicTacToeBot.Difficulty.EASY
+                            2 -> TicTacToeBot.Difficulty.MEDIUM
+                            else -> TicTacToeBot.Difficulty.HARD
+                        }
+
+                        // Let player choose X or O
+                        showMarkerSelectionDialog()
+                    }
+                }
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun showMarkerSelectionDialog() {
+        val options = arrayOf("Play as X (First Move)", "Play as O (Second Move)")
+
+        AlertDialog.Builder(this)
+            .setTitle("Choose Your Marker")
+            .setItems(options) { dialog, which ->
+                botMarker = if (which == 0) "O" else "X"
+
+                // Initialize the bot with selected settings
+                bot = TicTacToeBot(
+                    difficulty = botDifficulty,
+                    botMarker = botMarker
+                ) { position ->
+                    // This lambda is called when the bot makes a move
+                    handleCellClick(cells[position]!!)
+                }
+
+                // If bot goes first (player chose O), let bot make first move
+                if (botMarker == "X") {
+                    bot.makeMove(gameState, moveHistory)
+                }
+
+                updateStatus()
+                updateCounts()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -76,7 +143,14 @@ class MainActivity : AppCompatActivity() {
 
             // Set click listener
             cellView.setOnClickListener { view ->
-                handleCellClick(view)
+                if (gameActive && (!playWithBot || currentPlayer != botMarker)) {
+                    handleCellClick(view)
+
+                    // If it's now the bot's turn, let it make a move
+                    if (gameActive && playWithBot && currentPlayer == botMarker) {
+                        bot.makeMove(gameState, moveHistory)
+                    }
+                }
             }
 
             // Add to the grid
@@ -88,14 +162,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun handleCellClick(view: View) {
+    fun handleCellClick(view: View) {
         val index = view.tag as Int
 
         // Exit if game over or cell not empty
         if (!gameActive || gameState[index].isNotEmpty()) return
 
         // If the current player already has 3 pieces, remove the oldest
-        if (moveHistory[currentPlayer]?.size ?: 0 >= 3) {
+        if ((moveHistory[currentPlayer]?.size ?: 0) >= 3) {
             val oldestMoveIndex = moveHistory[currentPlayer]?.removeAt(0) ?: 0
             val oldestCell = cells[oldestMoveIndex]
 
@@ -128,7 +202,16 @@ class MainActivity : AppCompatActivity() {
         // Check for a win
         if (checkWin()) {
             gameActive = false
-            statusTextView.text = if (currentPlayer == "X") getString(R.string.player_x_wins) else getString(R.string.player_o_wins)
+
+            // Show winner
+            val winnerText = if (playWithBot && currentPlayer == botMarker) {
+                "Bot wins!"
+            } else {
+                "Player ${currentPlayer} wins!"
+            }
+
+            statusTextView.text = winnerText
+
             // Make the status text flash for winner
             statusTextView.setTextColor(
                 if (currentPlayer == "X")
@@ -183,6 +266,8 @@ class MainActivity : AppCompatActivity() {
         // Update status text with appropriate style
         statusTextView.apply {
             text = when {
+                // If playing with bot, show different message
+                playWithBot && currentPlayer == botMarker -> "Bot is thinking..."
                 currentPlayer == "X" && (moveHistory["X"]?.size ?: 0) < 3 -> getString(R.string.player_x_turn_place)
                 currentPlayer == "X" -> getString(R.string.player_x_turn_oldest)
                 (moveHistory["O"]?.size ?: 0) < 3 -> getString(R.string.player_o_turn_place)
