@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkBackground"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="3 MOVES TIC TAC TOE"
+        android:textColor="@color/neonGreen"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:shadowColor="@color/neonGreen"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/statusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Player X's turn to place"
+        android:textColor="@color/neonYellow"
+        android:textSize="20sp"
+        android:shadowColor="@color/neonYellow"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <LinearLayout
+        android:id="@+id/countsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusTextView">
+
+        <TextView
+            android:id="@+id/countXTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#330033"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Player X: 0/3 on board"
+            android:textColor="@color/playerX"
+            android:shadowColor="@color/playerX"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="8"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/countOTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#003333"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Player O: 0/3 on board"
+            android:textColor="@color/playerO"
+            android:shadowColor="@color/playerO"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="8"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/boardGridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:columnCount="3"
+        android:rowCount="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countsLayout">
+
+        <!-- The cells will be added programmatically in the MainActivity -->
+
+    </GridLayout>
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/neonOrange"
+        android:padding="16dp"
+        android:text="RESET GAME"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/boardGridLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

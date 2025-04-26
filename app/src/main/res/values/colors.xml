@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#22FFAA</color>
+    <color name="colorPrimaryDark">#1DB954</color>
+    <color name="colorAccent">#FF00FF</color>
+
+    <!-- Neon Theme Colors -->
+    <color name="neonPink">#FF00FF</color>
+    <color name="neonBlue">#00FFFF</color>
+    <color name="neonGreen">#39FF14</color>
+    <color name="neonYellow">#FFFF00</color>
+    <color name="neonOrange">#FF9900</color>
+
+    <!-- Player Colors -->
+    <color name="playerX">#FF00FF</color> <!-- Neon pink for X -->
+    <color name="playerO">#00FFFF</color> <!-- Neon blue for O -->
+
+    <!-- Background Colors -->
+    <color name="darkBackground">#121212</color>
+    <color name="cellBackground">#1E1E1E</color>
+</resources>

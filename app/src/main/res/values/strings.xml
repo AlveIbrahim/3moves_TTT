@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Three Move Tic Tac Toe</string>
+    <string name="reset_game">Reset Game</string>
+    <string name="player_x_turn_place">Player X\'s turn to place</string>
+    <string name="player_o_turn_place">Player O\'s turn to place</string>
+    <string name="player_x_turn_oldest">Player X\'s turn (oldest piece will be removed)</string>
+    <string name="player_o_turn_oldest">Player O\'s turn (oldest piece will be removed)</string>
+    <string name="player_x_wins">Player X wins!</string>
+    <string name="player_o_wins">Player O wins!</string>
+    <string name="draw">Game ended in a draw!</string>
+    <string name="player_x_count">Player X: %1$d/3 on board</string>
+    <string name="player_o_count">Player O: %1$d/3 on board</string>
+</resources>
